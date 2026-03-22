@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akkusativ - Khúc Ngâm Cách Bốn</title>
+   
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+   
+    <style>
+        :root {
+            --bg-cream: #F9F6F0;
+            --sage-green: #6B8E23;
+            --sage-light: #8FBC8F;
+            --terracotta: #C17767;
+            --terracotta-light: #D48C7A;
+            --forest-dark: #2C3525;
+            --stone-light: #E8E5D7;
+            --sand-warm: #F4E9D8;
+            --white-cream: #FFFEF9;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-cream);
+            color: var(--forest-dark);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .slides-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: row;
+            overflow-x: scroll;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        section.slide {
+            flex: 0 0 100%;
+            width: 100vw;
+            height: 100vh;
+            scroll-snap-align: start;
+            position: relative;
+            padding: 30px 5% 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        h1 { font-family: 'Playfair Display', serif; font-weight:700; font-size: clamp(2.2rem, 6vw, 4.5rem); line-height:1.15; margin-bottom:1rem; }
+        h3 { font-family: 'Playfair Display', serif; font-weight:700; font-size: clamp(1.3rem, 3.5vw, 1.9rem); margin:1.5rem 0 1rem; }
+
+        p, li { font-size: clamp(1rem, 2.2vw, 1.25rem); line-height:1.75; margin-bottom:0.9rem; }
+
+        .intro-poem {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: var(--terracotta);
+            font-size: clamp(1.1rem, 2.8vw, 1.45rem);
+            text-align: center;
+            max-width: 90%;
+            margin: 0 auto 35px;
+            line-height: 1.9;
+            opacity: 0.9;
+        }
+
+        .vietnamese-text { font-style: italic; color: var(--terracotta); }
+        .german-text    { font-weight: 600; color: var(--sage-green); }
+
+        .blob { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; transition: all 0.3s ease; }
+        .float { animation: float 3.5s ease-in-out infinite; }
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+        .fade-in { animation: fadeIn 1.2s ease-out forwards; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+
+        .leaf-bg {
+            position: absolute;
+            opacity: 0.07;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .nav-dots {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: row;
+            gap: 16px;
+        }
+        .nav-dot {
+            width: 14px; height: 14px;
+            border-radius: 50%;
+            background: var(--stone-light);
+            border: 2.5px solid var(--sage-green);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .nav-dot.active { background: var(--sage-green); transform: scale(1.45); }
+        .nav-dot:hover { background: var(--terracotta); transform: scale(1.3); }
+
+        .scroll-progress {
+            position: fixed; top:0; left:0; height:5px;
+            background: linear-gradient(90deg, var(--sage-green), var(--terracotta));
+            z-index: 1000; transition: width 0.15s ease; width:0;
+        }
+
+        .slide-counter {
+            position: fixed; bottom:25px; right:25px;
+            background: rgba(255,254,249,0.9);
+            padding:10px 18px; border-radius:30px;
+            font-size:0.95rem; box-shadow:0 6px 18px rgba(0,0,0,0.12);
+            z-index:100; backdrop-filter: blur(6px);
+        }
+
+        #slide1 { background: linear-gradient(135deg, var(--bg-cream) 0%, var(--sand-warm) 100%); }
+        #slide2, #slide6, #slide7 { background-color: var(--bg-cream); }
+        #slide3, #slide8 { background: linear-gradient(180deg, var(--bg-cream) 0%, var(--stone-light) 100%); }
+        #slide4 { background: linear-gradient(135deg, var(--sage-light) 0%, var(--bg-cream) 100%); }
+        #slide5 { background: linear-gradient(135deg, var(--terracotta-light) 0%, var(--bg-cream) 100%); }
+
+        .poem-container, .rules-container, .preposition-container, .comparison-container, .mindmap-container {
+            max-width: 1280px; width: 94%; z-index:10;
+        }
+
+        .poem-container { display: grid; grid-template-columns: 1fr 1fr; gap: 35px; }
+        .poem-blob { padding: 35px; box-shadow: 0 15px 45px rgba(0,0,0,0.08); }
+        .poem-vietnamese { background: var(--sand-warm); }
+        .poem-english    { background: var(--stone-light); }
+
+        .preposition-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px; }
+        .prep-leaf {
+            background: var(--white-cream); padding: 28px; border-radius: 40% 60% 60% 40% / 40% 40% 60% 60%;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1); transition: transform 0.3s;
+        }
+        .prep-leaf:hover { transform: translateY(-6px) scale(1.03); }
+
+        .canopy-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin: 0 0 35px; }
+        .canopy-word {
+            background: var(--sage-green); color: white; padding: 12px 26px;
+            border-radius: 50px; font-size: 1.2rem; box-shadow: 0 6px 18px rgba(107,142,35,0.3);
+        }
+
+        .comparison-container { display: grid; grid-template-columns: 1fr 1fr; gap: 35px; }
+        .comparison-column { padding: 35px; border-radius: 28px; box-shadow: 0 18px 50px rgba(0,0,0,0.08); }
+
+        .mindmap-root {
+            background: var(--sage-green); color: white; padding: 30px 50px;
+            border-radius: 60px; font-size: 2rem; margin: 0 auto 40px;
+            box-shadow: 0 18px 50px rgba(107,142,35,0.4); text-align: center;
+        }
+
+        @media (max-width: 900px) {
+            .poem-container, .comparison-container { grid-template-columns: 1fr; gap: 30px; }
+            section.slide { padding: 25px 6% 70px; }
+        }
+
+        @media (max-width: 600px) {
+            .intro-poem { font-size: clamp(1rem, 3.5vw, 1.25rem); }
+            h1 { font-size: 2.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <div class="nav-dots" id="navDots">
+        <div class="nav-dot active" data-slide="0"></div>
+        <div class="nav-dot" data-slide="1"></div>
+        <div class="nav-dot" data-slide="2"></div>
+        <div class="nav-dot" data-slide="3"></div>
+        <div class="nav-dot" data-slide="4"></div>
+        <div class="nav-dot" data-slide="5"></div>
+        <div class="nav-dot" data-slide="6"></div>
+        <div class="nav-dot" data-slide="7"></div>
+    </div>
+
+    <div class="slide-counter" id="slideCounter">Slide 1 / 8</div>
+
+    <div class="slides-container" id="slidesContainer">
+
+        <!-- SLIDE 1 - Giữ tiêu đề lớn -->
+        <section class="slide" id="slide1">
+            <svg class="leaf-bg leaf-1" viewBox="0 0 100 100" fill="currentColor"><path d="M50 0 C20 30 0 50 0 80 C0 95 15 100 30 100 C50 100 60 80 80 60 C90 50 100 40 100 20 C100 5 80 0 50 0 Z"/></svg>
+            <svg class="leaf-bg leaf-2" viewBox="0 0 100 100" fill="currentColor"><path d="M50 0 C20 30 0 50 0 80 C0 95 15 100 30 100 C50 100 60 80 80 60 C90 50 100 40 100 20 C100 5 80 0 50 0 Z"/></svg>
+
+            <div class="title-blob blob float" style="background:var(--sage-green); color:var(--white-cream); padding:50px 40px; max-width:850px; text-align:center; box-shadow:0 20px 60px rgba(107,142,35,0.3);">
+                <p class="title-small" style="font-size:1.1rem; letter-spacing:3px; text-transform:uppercase; opacity:0.9; margin-bottom:12px;">ĐẠI THI HÀO TIÊN SINH</p>
+                <h1 class="title-main">Khúc Ngâm<br>Cách Bốn (Akkusativ)</h1>
+                <p style="opacity:0.9; font-size:1.15rem;">Tiếng Đức Ngữ Pháp Căn Bản</p>
+            </div>
+
+            <div class="qr-section fade-in" style="margin-top:50px; animation-delay:0.6s; text-align:center;">
+                <div style="width:160px; height:160px; background:var(--stone-light); border:4px dashed var(--sage-green); border-radius:16px; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
+                    <span>QR Code<br>(Bài Trắc Nghiệm)</span>
+                </div>
+                <p style="color:var(--terracotta); font-weight:600; font-size:1.2rem;">📱 Quét mã QR để làm bài trắc nghiệm</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 2 -->
+        <section class="slide" id="slide2">
+            <svg class="leaf-bg leaf-3" viewBox="0 0 100 100" fill="currentColor"><path d="M50 0 C20 30 0 50 0 80 C0 95 15 100 30 100 C50 100 60 80 80 60 C90 50 100 40 100 20 C100 5 80 0 50 0 Z"/></svg>
+
+            <p class="intro-poem fade-in">Tiếng Đức Cách Bốn phân minh,<br>Tân ngữ trực tiếp, đinh ninh trong lòng...</p>
+
+            <div class="poem-container">
+                <div class="poem-blob poem-vietnamese fade-in">
+                    <h3>🇻🇳 Tiếng Việt</h3>
+                    <div class="poem-content">
+                        <p>Tiếng Đức Cách Bốn phân minh,<br>
+                        Tân ngữ trực tiếp, đinh ninh trong lòng.<br>
+                        Hai điều cốt lõi nằm lòng:<br>
+                        Danh từ biến đổi, cộng chung động từ.<br>
+                        Danh từ phân biệt giống loài:<br>
+                        Đực, trung, cái, giữ cho hoài chớ quên.<br>
+                        Giống đực biến đổi ưu tiên:<br>
+                        "der" thời hóa "den", "ein" liền "einen".<br>
+                        Cái, trung vẫn giữ thói quen:<br>
+                        "die", "das" y cũ, chẳng chen đổi dời.</p>
+                    </div>
+                </div>
+
+                <div class="poem-blob poem-english fade-in" style="animation-delay:0.3s;">
+                    <h3>🇬🇧 English</h3>
+                    <div class="poem-content">
+                        <p>German Case Four, the Akkusativ clear,<br>
+                        Direct object's role we must hold dear.<br>
+                        Two core things you must discern:<br>
+                        Noun changes, and the verbs to learn.<br>
+                        Nouns have genders, as we find:<br>
+                        Masculine, Neuter, Feminine kind.<br>
+                        Masculine changes in its way:<br>
+                        "Der" to "den", "ein" to "einen" sway.<br>
+                        Feminine, Neuter stay the same:<br>
+                        "Die" and "das" keep their old name.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 3 -->
+        <section class="slide" id="slide3">
+            <svg class="leaf-bg leaf-1" viewBox="0 0 100 100" fill="currentColor"><path d="M50 0 C20 30 0 50 0 80 C0 95 15 100 30 100 C50 100 60 80 80 60 C90 50 100 40 100 20 C100 5 80 0 50 0 Z"/></svg>
+
+            <p class="intro-poem fade-in">Danh từ phân biệt giống loài...<br>Giống đực biến đổi ưu tiên...</p>
+
+            <div class="rules-container">
+                <div class="rule-card fade-in">
+                    <div style="font-size:3.2rem; margin-bottom:20px;">🎯</div>
+                    <h3>Tân Ngữ Trực Tiếp</h3>
+                    <p>Akkusativobjekt - Đối tượng trực tiếp chịu tác động của động từ</p>
+                    <div style="background:var(--bg-cream); padding:18px; border-radius:12px; margin-top:20px;">
+                        <p class="german-text">Ich sehe <strong>den Mann</strong>.</p>
+                        <p class="vietnamese-text">Tôi nhìn thấy người đàn ông.</p>
+                    </div>
+                </div>
+
+                <div class="rule-card fade-in" style="animation-delay:0.2s;">
+                    <div style="font-size:3.2rem; margin-bottom:20px;">♂️</div>
+                    <h3>Giống Đực (Biến Đổi)</h3>
+                    <p>Chỉ giống đực thay đổi ở Akkusativ</p>
+                    <div style="margin-top:20px;">
+                        <p class="german-text">der → <strong>den</strong></p>
+                        <p class="german-text">ein → <strong>einen</strong></p>
+                    </div>
+                </div>
+
+                <div class="rule-card fade-in" style="animation-delay:0.4s;">
+                    <div style="font-size:3.2rem; margin-bottom:20px;">♀️</div>
+                    <h3>Giống Cái & Trung</h3>
+                    <p>Giữ nguyên không đổi ở Akkusativ</p>
+                    <div style="margin-top:20px;">
+                        <p class="german-text">die → die</p>
+                        <p class="german-text">das → das</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 4 -->
+        <section class="slide" id="slide4">
+            <svg class="leaf-bg leaf-2 leaf-float" viewBox="0 0 100 100" fill="currentColor"><path d="M50 0 C20 30 0 50 0 80 C0 95 15 100 30 100 C50 100 60 80 80 60 C90 50 100 40 100 20 C100 5 80 0 50 0 Z"/></svg>
+
+            <p class="intro-poem fade-in">"für, um, durch, ohne" - nhớ lời đi chung</p>
+
+            <div class="preposition-container">
+                <div class="prep-leaf float">
+                    <p style="font-size:2.8rem; color:var(--sage-green); margin-bottom:8px;">für</p>
+                    <p style="color:var(--terracotta); font-style:italic;">(cho)</p>
+                    <p class="german-text">Das Geschenk ist <strong>für den Sohn</strong>.</p>
+                    <p class="vietnamese-text">Món quà này dành cho người con trai.</p>
+                </div>
+                <!-- các prep-leaf còn lại tương tự, giữ nguyên như code cũ -->
+                <div class="prep-leaf float" style="animation-delay:0.2s;">
+                    <p style="font-size:2.8rem; color:var(--sage-green); margin-bottom:8px;">um</p>
+                    <p style="color:var(--terracotta); font-style:italic;">(quanh, vào lúc)</p>
+                    <p class="german-text">Wir reisen <strong>um die Welt</strong>.</p>
+                    <p class="vietnamese-text">Chúng tôi du lịch vòng quanh thế giới.</p>
+                </div>
+                <div class="prep-leaf float" style="animation-delay:0.4s;">
+                    <p style="font-size:2.8rem; color:var(--sage-green); margin-bottom:8px;">durch</p>
+                    <p style="color:var(--terracotta); font-style:italic;">(qua, bởi)</p>
+                    <p class="german-text">Er geht <strong>durch den Wald</strong>.</p>
+                    <p class="vietnamese-text">Anh ấy đi xuyên qua khu rừng.</p>
+                </div>
+                <div class="prep-leaf float" style="animation-delay:0.6s;">
+                    <p style="font-size:2.8rem; color:var(--sage-green); margin-bottom:8px;">ohne</p>
+                    <p style="color:var(--terracotta); font-style:italic;">(không có)</p>
+                    <p class="german-text">Sie kommt <strong>ohne ihren Freund</strong>.</p>
+                    <p class="vietnamese-text">Cô ấy đến mà không có bạn trai.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 5, 6, 7, 8 tương tự: thay h2 bằng .intro-poem, giữ nguyên nội dung bên dưới -->
+
+        <!-- SLIDE 5 -->
+        <section class="slide" id="slide5">
+            <svg class="leaf-bg leaf-4 leaf-float" viewBox="0 0 100 100" fill="currentColor"><path d="M50 0 C20 30 0 50 0 80 C0 95 15 100 30 100 C50 100 60 80 80 60 C90 50 100 40 100 20 C100 5 80 0 50 0 Z"/></svg>
+
+            <p class="intro-poem fade-in">"gegen, bis, entlang" - Luôn đòi Cách Bốn</p>
+
+            <div class="preposition-container">
+                <div class="prep-leaf float">
+                    <p style="font-size:2.8rem; color:var(--terracotta); margin-bottom:8px;">gegen</p>
+                    <p style="color:var(--terracotta); font-style:italic;">(chống lại, về phía)</p>
+                    <p class="german-text">Der Ball fliegt <strong>gegen die Wand</strong>.</p>
+                    <p class="vietnamese-text">Quả bóng bay vào tường.</p>
+                </div>
+                <div class="prep-leaf float" style="animation-delay:0.2s;">
+                    <p style="font-size:2.8rem; color:var(--terracotta); margin-bottom:8px;">bis</p>
+                    <p style="color:var(--terracotta); font-style:italic;">(đến khi, đến nơi)</p>
+                    <p class="german-text">Der Zug fährt <strong>bis den Hauptbahnhof</strong>.</p>
+                    <p class="vietnamese-text">Tàu chạy đến ga chính.</p>
+                </div>
+                <div class="prep-leaf float" style="animation-delay:0.4s;">
+                    <p style="font-size:2.8rem; color:var(--terracotta); margin-bottom:8px;">entlang</p>
+                    <p style="color:var(--terracotta); font-style:italic;">(dọc theo)</p>
+                    <p class="german-text">Wir gehen <strong>den Fluss entlang</strong>.</p>
+                    <p class="vietnamese-text">Chúng tôi đi dọc theo dòng sông.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 6 -->
+        <section class="slide" id="slide6">
+            <svg class="leaf-bg leaf-1" viewBox="0 0 100 100" fill="currentColor"><path d="M50 0 C20 30 0 50 0 80 C0 95 15 100 30 100 C50 100 60 80 80 60 C90 50 100 40 100 20 C100 5 80 0 50 0 Z"/></svg>
+
+            <p class="intro-poem fade-in">Giới từ hỗn hợp - di chuyển thì dùng Akkusativ</p>
+
+            <div class="canopy-container fade-in">
+                <span class="canopy-word">in</span><span class="canopy-word">an</span><span class="canopy-word">auf</span>
+                <span class="canopy-word">unter</span><span class="canopy-word">über</span><span class="canopy-word">neben</span>
+                <span class="canopy-word">zwischen</span><span class="canopy-word">vor</span><span class="canopy-word">hinter</span>
+            </div>
+
+            <div style="background:var(--terracotta); color:white; padding:28px 45px; border-radius:24px; text-align:center; max-width:880px; margin:0 auto 40px;" class="fade-in">
+                <h3 style="font-size:1.7rem; margin-bottom:12px;">🌿 Quy Tắc Di Chuyển</h3>
+                <p style="font-size:1.3rem;"><strong>Di chuyển vào vị trí mới (Wohin?) → Akkusativ</strong></p>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:25px; max-width:1100px; width:100%;">
+                <div class="fade-in" style="background:var(--stone-light); padding:22px; border-radius:16px;">
+                    <p class="german-text">Ich gehe <strong>in die Bibliothek</strong>.</p>
+                    <p class="vietnamese-text">Tôi đi vào thư viện. (di chuyển)</p>
+                </div>
+                <div class="fade-in" style="animation-delay:0.2s; background:var(--stone-light); padding:22px; border-radius:16px;">
+                    <p class="german-text">Er legt das Buch <strong>auf den Tisch</strong>.</p>
+                    <p class="vietnamese-text">Anh ấy đặt cuốn sách lên bàn.</p>
+                </div>
+                <div class="fade-in" style="animation-delay:0.4s; background:var(--stone-light); padding:22px; border-radius:16px;">
+                    <p class="german-text">Die Katze kriecht <strong>unter das Bett</strong>.</p>
+                    <p class="vietnamese-text">Con mèo chui xuống dưới gầm giường.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 7 -->
+        <section class="slide" id="slide7">
+            <svg class="leaf-bg leaf-3" viewBox="0 0 100 100" fill="currentColor"><path d="M50 0 C20 30 0 50 0 80 C0 95 15 100 30 100 C50 100 60 80 80 60 C90 50 100 40 100 20 C100 5 80 0 50 0 Z"/></svg>
+
+            <p class="intro-poem fade-in">Động hay tĩnh? Akkusativ hay Dativ?</p>
+
+            <div class="comparison-container">
+                <div class="comparison-column fade-in" style="background:linear-gradient(135deg,var(--sage-light)0%,var(--bg-cream)100%); border:4px solid var(--sage-green);">
+                    <div style="font-size:4.5rem; margin-bottom:20px;">🌊</div>
+                    <h3>Sự Di Chuyển</h3>
+                    <div style="background:var(--sage-green); color:white; padding:10px 28px; border-radius:12px; font-size:1.6rem; margin:20px 0; display:inline-block;">Wohin? (Đi đâu?)</div>
+                    <p style="margin:20px 0; font-size:1.25rem;">→ <strong>Akkusativ</strong> (Cách 4)</p>
+                    <div style="margin-top:20px;">
+                        <p class="german-text">Ich stelle die Vase <strong>auf den Tisch</strong>.</p>
+                        <p class="vietnamese-text">Tôi đặt chiếc bình <strong>lên</strong> bàn. (hành động)</p>
+                    </div>
+                </div>
+
+                <div class="comparison-column fade-in" style="animation-delay:0.3s; background:linear-gradient(135deg,var(--terracotta-light)0%,var(--bg-cream)100%); border:4px solid var(--terracotta);">
+                    <div style="font-size:4.5rem; margin-bottom:20px;">🪨</div>
+                    <h3>Vị Trí Cố Định</h3>
+                    <div style="background:var(--terracotta); color:white; padding:10px 28px; border-radius:12px; font-size:1.6rem; margin:20px 0; display:inline-block;">Wo? (Ở đâu?)</div>
+                    <p style="margin:20px 0; font-size:1.25rem;">→ <strong>Dativ</strong> (Cách 3)</p>
+                    <div style="margin-top:20px;">
+                        <p class="german-text">Die Vase steht <strong>auf dem Tisch</strong>.</p>
+                        <p class="vietnamese-text">Chiếc bình đang <strong>ở trên</strong> bàn. (vị trí)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 8 -->
+        <section class="slide" id="slide8">
+            <svg class="leaf-bg leaf-2" viewBox="0 0 100 100" fill="currentColor"><path d="M50 0 C20 30 0 50 0 80 C0 95 15 100 30 100 C50 100 60 80 80 60 C90 50 100 40 100 20 C100 5 80 0 50 0 Z"/></svg>
+            <svg class="leaf-bg leaf-4" viewBox="0 0 100 100" fill="currentColor"><path d="M50 0 C20 30 0 50 0 80 C0 95 15 100 30 100 C50 100 60 80 80 60 C90 50 100 40 100 20 C100 5 80 0 50 0 Z"/></svg>
+
+            <p class="intro-poem fade-in">Tổng kết rễ cây Akkusativ</p>
+
+            <div class="mindmap-container">
+                <div class="mindmap-root blob float fade-in">
+                    🌳 AKKUSATIV (Cách 4)
+                </div>
+
+                <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:30px;">
+                    <div class="fade-in" style="background:var(--white-cream); padding:25px; border-radius:20px; box-shadow:0 12px 40px rgba(0,0,0,0.08);">
+                        <h3 style="color:var(--sage-green); font-size:1.45rem; margin-bottom:15px; border-bottom:3px solid var(--stone-light); padding-bottom:10px;">📍 Tân Ngữ Trực Tiếp</h3>
+                        <ul style="list-style:none; line-height:1.9;">
+                            <li>Đối tượng chịu tác động</li>
+                            <li>Ich sehe <strong>den Mann</strong></li>
+                            <li>Sie hat <strong>einen Bruder</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="fade-in" style="animation-delay:0.2s; background:var(--white-cream); padding:25px; border-radius:20px; box-shadow:0 12px 40px rgba(0,0,0,0.08);">
+                        <h3 style="color:var(--sage-green); font-size:1.45rem; margin-bottom:15px; border-bottom:3px solid var(--stone-light); padding-bottom:10px;">🔄 Biến Đổi Danh Từ</h3>
+                        <ul style="list-style:none; line-height:1.9;">
+                            <li><strong>Giống Đực:</strong> der → den, ein → einen</li>
+                            <li><strong>Giống Cái:</strong> die → die</li>
+                            <li><strong>Giống Trung:</strong> das → das</li>
+                        </ul>
+                    </div>
+
+                    <div class="fade-in" style="animation-delay:0.4s; background:var(--white-cream); padding:25px; border-radius:20px; box-shadow:0 12px 40px rgba(0,0,0,0.08);">
+                        <h3 style="color:var(--sage-green); font-size:1.45rem; margin-bottom:15px; border-bottom:3px solid var(--stone-light); padding-bottom:10px;">🔗 Giới Từ Cố Định</h3>
+                        <ul style="list-style:none; line-height:1.9;">
+                            <li>für, um, durch, ohne</li>
+                            <li>gegen, bis, entlang</li>
+                            <li>Luôn Akkusativ</li>
+                        </ul>
+                    </div>
+
+                    <div class="fade-in" style="animation-delay:0.6s; background:var(--white-cream); padding:25px; border-radius:20px; box-shadow:0 12px 40px rgba(0,0,0,0.08);">
+                        <h3 style="color:var(--sage-green); font-size:1.45rem; margin-bottom:15px; border-bottom:3px solid var(--stone-light); padding-bottom:10px;">🌲 Giới Từ Hỗn Hợp</h3>
+                        <ul style="list-style:none; line-height:1.9;">
+                            <li>in, an, auf, unter, über...</li>
+                            <li><strong>Di chuyển</strong> → Akkusativ</li>
+                            <li><strong>Cố định</strong> → Dativ</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fade-in" style="margin-top:50px; text-align:center; animation-delay:0.8s;">
+                <p style="font-size:1.4rem; color:var(--sage-green); font-weight:700;">🎓 Sẵn sàng kiểm tra chưa?</p>
+                <p style="margin-top:12px;">Quét QR ở Slide 1 để bắt đầu!</p>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // JavaScript giữ nguyên như phiên bản trước (không thay đổi)
+        const slidesContainer = document.getElementById('slidesContainer');
+        const navDots = document.querySelectorAll('.nav-dot');
+        const slideCounter = document.getElementById('slideCounter');
+        const scrollProgress = document.getElementById('scrollProgress');
+
+        function updateActiveSlide() {
+            const scrollPos = slidesContainer.scrollLeft;
+            const slideWidth = window.innerWidth;
+            const activeIndex = Math.round(scrollPos / slideWidth);
+
+            navDots.forEach((dot, i) => dot.classList.toggle('active', i === activeIndex));
+
+            slideCounter.textContent = `Slide ${activeIndex + 1} / 8`;
+
+            const progress = ((activeIndex + 1) / 8) * 100;
+            scrollProgress.style.width = `${progress}%`;
+        }
+
+        navDots.forEach((dot, idx) => {
+            dot.addEventListener('click', () => {
+                slidesContainer.scrollTo({ left: idx * window.innerWidth, behavior: 'smooth' });
+            });
+        });
+
+        slidesContainer.addEventListener('scroll', updateActiveSlide);
+
+        document.addEventListener('keydown', e => {
+            const current = Math.round(slidesContainer.scrollLeft / window.innerWidth);
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                if (current < 7) slidesContainer.scrollTo({ left: (current + 1) * window.innerWidth, behavior: 'smooth' });
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (current > 0) slidesContainer.scrollTo({ left: (current - 1) * window.innerWidth, behavior: 'smooth' });
+            }
+        });
+
+        let touchStartX = 0;
+        slidesContainer.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX);
+        slidesContainer.addEventListener('touchend', e => {
+            const diff = touchStartX - e.changedTouches[0].screenX;
+            const current = Math.round(slidesContainer.scrollLeft / window.innerWidth);
+            if (diff > 60 && current < 7) {
+                slidesContainer.scrollTo({ left: (current + 1) * window.innerWidth, behavior: 'smooth' });
+            } else if (diff < -60 && current > 0) {
+                slidesContainer.scrollTo({ left: (current - 1) * window.innerWidth, behavior: 'smooth' });
+            }
+        });
+
+        updateActiveSlide();
+        window.addEventListener('resize', updateActiveSlide);
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.15, root: slidesContainer });
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 1s ease-out';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
